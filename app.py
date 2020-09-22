@@ -52,13 +52,13 @@ def create():
 def detail(plant_id):
     """Display the plant detail page & process data from the harvest form."""
 
-    plant_to_show = mongo.db.plants.find({'_id':plant_id})
+    plant_to_show = mongo.db.plants.find_one({'_id':ObjectId(plant_id)})
     
     print(plant_id)
    
-    harvests = mongo.db.harvest.find({'plant_id':plant_id})
-    for harvest in harvests:
-        print(harvest)
+    harvests = list(mongo.db.harvest.find({'plant_id':plant_id}))
+    # for harvest in harvests:
+    #     print(harvest)
     
 
     context = {
@@ -66,7 +66,10 @@ def detail(plant_id):
         'harvests': harvests,
         'plant_id': plant_id
     }
+
+    print(plant_to_show)
     return render_template('detail.html', **context)
+    
 
 @app.route('/harvest/<plant_id>', methods=['POST'])
 def harvest(plant_id):
